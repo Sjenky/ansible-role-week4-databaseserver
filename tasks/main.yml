@@ -37,3 +37,5 @@
     priv: "{{ mysql_database_name }}.*:ALL"
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
+
+# Deze moet je hebben!
