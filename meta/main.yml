@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  role_name: week4_databaseserver
+  author: Ron Schenk
+  description: Installeert MySQL en maakt dbuser aan op Ubuntu.
+  company: Windesheim
+  license: MIT
+  min_ansible_version: "2.14"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
+
+  galaxy_tags:
+    - mysql
+    - database
+    - ubuntu
+
+dependencies: []

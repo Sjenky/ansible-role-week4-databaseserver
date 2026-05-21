@@ -1,0 +1,39 @@
+---
+- name: Update apt cache voor databaseserver
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Installeer MySQL en Python MySQL module
+  ansible.builtin.apt:
+    name: "{{ database_packages }}"
+    state: present
+  notify: Herstart mysql
+
+- name: Start en enable MySQL
+  ansible.builtin.service:
+    name: "{{ mysql_service_name }}"
+    state: started
+    enabled: true
+
+- name: Zet MySQL bind-address open voor labomgeving
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+    backup: true
+  notify: Herstart mysql
+
+- name: Maak database aan
+  community.mysql.mysql_db:
+    name: "{{ mysql_database_name }}"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Maak MySQL gebruiker dbuser aan
+  community.mysql.mysql_user:
+    name: "{{ mysql_user_name }}"
+    password: "{{ mysql_user_password }}"
+    host: "{{ mysql_allowed_host }}"
+    priv: "{{ mysql_database_name }}.*:ALL"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
